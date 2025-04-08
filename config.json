@@ -1,0 +1,10 @@
+{
+  "api_key": "",
+  "cookie": "auth_token=; ct0=;",
+  "tag": "#chovy",
+  "filter": "filter:links -filter:replies until:2025-04-07 since:2025-04-01",
+  "down_count": 200,
+  "media_latest": true,
+  "text_down": false,
+  "theme": "Light"
+}
