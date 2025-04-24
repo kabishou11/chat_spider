@@ -1,10 +1,14 @@
 {
   "api_key": "",
-  "cookie": "auth_token=; ct0=;",
-  "tag": "#chovy",
-  "filter": "filter:links -filter:replies until:2025-04-07 since:2025-04-01",
-  "down_count": 200,
+  "cookie": "",
+  "tag": "",
+  "filter": "filter:links -filter:replies until:2025-04-07 since:2025-04-06",
+  "down_count": 100,
   "media_latest": true,
   "text_down": false,
-  "theme": "Light"
+  "theme": "Light",
+  "prompt_templates": {
+    "总结分析": "\n你是一个高级数据分析助手，擅长处理 CSV 数据。\n以下是上传的 CSV 文件数据：\n{file_contents}\n\n我的问题是：{user_input}\n\n请逐行分析 CSV 数据，每行代表一条内容，总结每行的核心信息（如新闻要点、事件描述或其他有用信息），并回答我的问题。\n",
+    "通用问答": "\n你是一个智能助手，以下是上传的文件数据：\n{file_contents}\n\n我的问题是：{user_input}\n\n请根据文件数据和你的知识回答问题。\n"
+  }
 }

@@ -1,36 +1,9 @@
 import streamlit as st
 import asyncio
 import os
-import json
 import pandas as pd
 from tag_down3 import run_tag_down
-
-CONFIG_FILE = "config.json"
-
-def load_config():
-    """加载配置文件"""
-    if os.path.exists(CONFIG_FILE):
-        try:
-            with open(CONFIG_FILE, "r", encoding="utf-8") as f:  # 指定 UTF-8 编码
-                return json.load(f)
-        except UnicodeDecodeError as e:
-            st.error(f"配置文件解码错误: {e}，请确保文件使用 UTF-8 编码")
-            return {}
-        except json.JSONDecodeError as e:
-            st.error(f"配置文件格式错误: {e}，使用默认配置")
-            return {}
-        except Exception as e:
-            st.error(f"加载配置文件失败: {e}，使用默认配置")
-            return {}
-    return {}
-
-def save_config(config):
-    """保存配置文件"""
-    try:
-        with open(CONFIG_FILE, "w", encoding="utf-8") as f:  # 指定 UTF-8 编码
-            json.dump(config, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        st.error(f"保存配置文件失败: {e}")
+from utils import load_config, save_config
 
 st.markdown("""
 <style>
@@ -38,14 +11,16 @@ st.markdown("""
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
-.fade-in {
-    animation: fadeIn 1s ease-in;
-}
+.fade-in { animation: fadeIn 1s ease-in; }
 </style>
 """, unsafe_allow_html=True)
 
+@st.cache_data
+def cached_load_config():
+    return load_config()
+
 def main():
-    saved_config = load_config()
+    saved_config = cached_load_config()
     if "config" not in st.session_state:
         st.session_state.config = saved_config
 
@@ -54,10 +29,10 @@ def main():
 
     st.subheader("爬取参数设置")
     with st.form(key="crawler_form"):
-        cookie = st.text_area("Twitter Cookie", value=st.session_state.config.get("cookie", ""), height=100)
-        tag = st.text_input("标签 (Tag)", value=st.session_state.config.get("tag", "#ig"))
-        _filter = st.text_input("搜索条件 (Filter)", value=st.session_state.config.get("filter", "filter:links -filter:replies until:2025-03-28 since:2025-03-27"))
-        down_count = st.number_input("下载数量", min_value=50, max_value=10000, value=st.session_state.config.get("down_count", 100), step=50)
+        cookie = st.text_area("Twitter Cookie", value=st.session_state.config.get("cookie", ""), height=100, help="格式示例: auth_token=xxx; ct0=yyy;")
+        tag = st.text_input("标签 (Tag)", value=st.session_state.config.get("tag", "#ig"), help="带 # 的标签，如 #faker")
+        _filter = st.text_input("搜索条件 (Filter)", value=st.session_state.config.get("filter", "filter:links -filter:replies until:2025-03-28 since:2025-03-27"), help="示例: filter:links -filter:replies until:2023-10-01 since:2023-09-01")
+        down_count = st.number_input("下载数量", min_value=50, max_value=10000, value=st.session_state.config.get("down_count", 100), step=50, help="建议为 50 的倍数")
         media_latest = st.checkbox("从 [最新] 标签页下载", value=st.session_state.config.get("media_latest", True))
         text_down = st.checkbox("仅下载文本内容", value=st.session_state.config.get("text_down", False))
         submit_button = st.form_submit_button(label="开始下载", type="primary")
@@ -71,7 +46,7 @@ def main():
 
     if submit_button:
         if not cookie or "auth_token" not in cookie or "ct0" not in cookie:
-            st.error("请提供有效的 Twitter Cookie！")
+            st.error("请提供有效的 Twitter Cookie，需包含 auth_token 和 ct0！")
         else:
             with st.spinner("正在下载，请稍候..."):
                 try:

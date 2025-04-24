@@ -36,7 +36,7 @@ def get_heighest_video_quality(variants) -> str:
 # CSV 生成类
 class csv_gen:
     def __init__(self, save_path: str, text_down: bool) -> None:
-        self.file_path = f'{save_path}/{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}-mode.csv'
+        self.file_path = os.path.join(save_path, f'{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}-mode.csv')
         self.f = open(self.file_path, 'w', encoding='utf-8-sig', newline='')
         self.writer = csv.writer(self.f)
         self.writer.writerow(['Run Time : ' + datetime.now().strftime('%Y-%m-%d %H-%M-%S')])
@@ -134,12 +134,12 @@ async def search_media(url, headers, cursor, folder_path):
                     media_url = get_heighest_video_quality(_media['video_info']['variants'])
                     media_type = 'Video'
                     is_image = False
-                    _file_name = f'{folder_path}{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.mp4'
+                    _file_name = os.path.join(folder_path, f"{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.mp4")
                 else:
                     media_url = _media['media_url_https']
                     media_type = 'Image'
                     is_image = True
-                    _file_name = f'{folder_path}{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.png'
+                    _file_name = os.path.join(folder_path, f"{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.png")
                 media_csv_info = [time_stamp, display_name, screen_name, tweet_url, media_type, media_url, _file_name, 
                                   tweet_content, Favorite_Count, Retweet_Count, Reply_Count]
                 media_lst.append([media_url, media_csv_info, is_image])
@@ -198,12 +198,12 @@ async def search_media_latest(url, headers, cursor, folder_path):
                     media_url = get_heighest_video_quality(_media['video_info']['variants'])
                     media_type = 'Video'
                     is_image = False
-                    _file_name = f'{folder_path}{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.mp4'
+                    _file_name = os.path.join(folder_path, f"{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.mp4")
                 else:
                     media_url = _media['media_url_https']
                     media_type = 'Image'
                     is_image = True
-                    _file_name = f'{folder_path}{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.png'
+                    _file_name = os.path.join(folder_path, f"{stamp2time(time_stamp)}_{screen_name}_{hash_save_token(media_url)}.png")
                 media_csv_info = [time_stamp, display_name, screen_name, tweet_url, media_type, media_url, _file_name, 
                                   tweet_content, Favorite_Count, Retweet_Count, Reply_Count]
                 media_lst.append([media_url, media_csv_info, is_image])
@@ -271,7 +271,7 @@ async def run_tag_down(cookie, tag, _filter, down_count, media_latest, text_down
             product = 'Latest'
     _filter = ' ' + _filter
 
-    # 固定保存路径到 D:\newshuju\x
+    # 固定保存路径到 D:\spider\chat_spider\x
     base_path = r"D:\spider\chat_spider\x"
     folder_path = os.path.join(base_path, del_special_char(tag) if tag else del_special_char(_filter))
     if not os.path.exists(folder_path):
