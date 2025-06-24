@@ -9,8 +9,9 @@ pip install -r requirements.txt
 
 
 使用  
-config.json中需要配置好apikey，目前用的是deepseek，还需要天上cookie中的两个字段，注意⚠️是登陆之后的  
+config.json中需要配置好apikey，目前用的是deepseek，还需要填上cookie中的两个字段，注意⚠️是登陆之后的  
 streamlit run mian.py
 
 
 声明：仅供学习参考
+欢迎大佬指正
